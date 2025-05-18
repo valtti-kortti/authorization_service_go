@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Authorization service",
+        "contact": {}
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "paths": {
+        "/guid": {
+            "get": {
+                "description": "Возвращает GUID аутентифицированного пользователя",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Получение GUID пользователя",
+                "operationId": "get-user-guid",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "description": "Удаляет refresh токен пользователя и завершает сессию",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Выход пользователя",
+                "operationId": "logout-user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/refresh": {
+            "get": {
+                "description": "Обновляет access и refresh токены по куки пользователя",
+                "tags": [
+                    "tokens"
+                ],
+                "summary": "Обновление пары токенов",
+                "operationId": "refresh-tokens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.TokenResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tokens": {
+            "get": {
+                "description": "Возвращает access и refresh токены по GUID пользователя",
+                "tags": [
+                    "tokens"
+                ],
+                "summary": "Получение пары токенов",
+                "operationId": "get-tokens",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GUID пользователя",
+                        "name": "guid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.TokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tokenutils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "tokenutils.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "tokenutils.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

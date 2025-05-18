@@ -1,0 +1,102 @@
+basePath: /
+definitions:
+  tokenutils.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  tokenutils.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  title: Authorization service
+paths:
+  /guid:
+    get:
+      description: Возвращает GUID аутентифицированного пользователя
+      operationId: get-user-guid
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+      summary: Получение GUID пользователя
+      tags:
+      - user
+  /logout:
+    get:
+      description: Удаляет refresh токен пользователя и завершает сессию
+      operationId: logout-user
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+      summary: Выход пользователя
+      tags:
+      - user
+  /refresh:
+    get:
+      description: Обновляет access и refresh токены по куки пользователя
+      operationId: refresh-tokens
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tokenutils.TokenResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+      summary: Обновление пары токенов
+      tags:
+      - tokens
+  /tokens:
+    get:
+      description: Возвращает access и refresh токены по GUID пользователя
+      operationId: get-tokens
+      parameters:
+      - description: GUID пользователя
+        in: query
+        name: guid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tokenutils.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tokenutils.ErrorResponse'
+      summary: Получение пары токенов
+      tags:
+      - tokens
+swagger: "2.0"
