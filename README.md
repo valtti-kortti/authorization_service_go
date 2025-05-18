@@ -6,7 +6,7 @@
 - `GET /tokens?guid=...` — получить пару токенов
 - `GET /refresh` — обновить токены
 - `GET /guid` — получить GUID пользователя (требует авторизации)
-- `GET /logout` — выйти (удалить refresh токен)
+- `GET /logout` — выйти
 
 ## Swagger
 
